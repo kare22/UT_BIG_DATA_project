@@ -19,27 +19,29 @@ Software:
 - Docker
 - Jupyter Notebook
 
-Python Libraries
+Python Libraries:
 - pandas
 - geopandas
 - sedona
 - pyspark
 - shapely
 
-Additional Libraries
+Additional Libraries:
 - pyspark.sql: SparkSession, col, to_timestamp, unix_timestamp, lag, sum, avg, round, Window, expr
 - sedona.utils: SedonaKryoRegistrator
 - pyspark.sql.types: StructType, StructField, StringType, DoubleType, IntegerType
 
-Docker
+Docker:
 - Docker Compose
 
-Data Files
-Sample data from Moodle : 
+Data Files:  
+Sample data from Moodle 
 - nyc-boroughs.geojson
 - Sample NYC Data.csv
 
-or http://www.andresmh.com/nyctaxitrips/ 
+or   
+
+- http://www.andresmh.com/nyctaxitrips/  
 - Trips and fares data
 
 ### Setup
