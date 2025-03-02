@@ -45,7 +45,10 @@ or http://www.andresmh.com/nyctaxitrips/
 ### Setup
 
 * Add `nyc-boroughs.geojson` and `Sample NYC Data.csv` to `data`folder
-* Run Docker compose file
+* Run Docker compose file from project directory: 
+```bash
+docker compose -f compose.yml up -d
+```
 * Notebooks are automatically hooked to Docker
 * Run `0_data_enrichment.ipynb` to get the enriched data in mnt/output
 * To use the data load out load it from `output/output.parquet`
