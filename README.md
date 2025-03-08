@@ -26,11 +26,6 @@ Python Libraries:
 - pyspark
 - shapely
 
-Additional Libraries:
-- pyspark.sql: SparkSession, col, to_timestamp, unix_timestamp, lag, sum, avg, round, Window, expr
-- sedona.utils: SedonaKryoRegistrator
-- pyspark.sql.types: StructType, StructField, StringType, DoubleType, IntegerType
-
 Docker:
 - Docker Compose
 
@@ -46,7 +41,9 @@ or
 
 ### Setup
 
-* Add `nyc-boroughs.geojson` and `Sample NYC Data.csv` to `data`folder
+* Add data to `data`folder
+- save trip_data folder from http://www.andresmh.com/nyctaxitrips/   
+- save  `nyc-boroughs.geojson` and `Sample NYC Data.csv`  
 * Run Docker compose file from project directory: 
 ```bash
 docker compose -f compose.yml up -d
