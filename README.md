@@ -42,8 +42,8 @@ or
 ### Setup
 
 * Add data to `data`folder
-- save trip_data folder from http://www.andresmh.com/nyctaxitrips/   
-- save  `nyc-boroughs.geojson` and `Sample NYC Data.csv`  
+  - save trip_data folder from http://www.andresmh.com/nyctaxitrips/   
+  - save  `nyc-boroughs.geojson` and `Sample NYC Data.csv`  
 * Run Docker compose file from project directory: 
 ```bash
 docker compose -f compose.yml up -d
@@ -62,9 +62,20 @@ Licensed under the Apache 2.0 License.
 ## Queries 
 All queries in notebook consists of comments of every step. 
 
+### Data Enrichment
+All the queries must be done after data enrichment, which means that to the taxi ride data set was added pick up and drop off borough names.
+
+#### Before optimizing
+This part processes NYC taxi trip data and enriches it with borough-level geospatial information using Spark and Sedona. It starts by initializing a Spark session with Sedona for geospatial processing. Trip data is loaded from CSV files with a predefined schema, selecting only essential columns to optimize performance. NYC borough boundary data is read from a GeoJSON file, converted to WKT format, and transformed into a Spark DataFrame. A helper function converts longitude and latitude into WKT Points, which are then transformed into geometries for pickup and dropoff locations. The trip data is joined with borough boundaries using spatial intersections to determine the pickup and dropoff boroughs. Unnecessary columns are removed, and timestamps are formatted for consistency. Finally, the processed data, including medallion, pickup/dropoff boroughs, and timestamps, is written as a Parquet file for efficient storage and querying.
+
+#### After optimizing
+???
+
+### Dealing with queries
+The solution preprocesses the taxi trip data by sorting it by pickup time for each taxi (medallion) and calculating the idle time between consecutive trips. It then filters out invalid idle times (negative or greater than 4 hours). 
 1) Query 1: Utilization per taxi/driver
   - Description : Compute the fraction of time that a cab is on the road and occupied.
-  - Solution : The solution preprocesses the taxi trip data by sorting it by pickup time for each taxi (medallion) and calculating the idle time between consecutive trips. It then filters out invalid idle times (negative or greater than 4 hours). For Query 1, it groups the data by taxi and computes the average trip time and idle time per taxi. Finally, utilization is calculated as the ratio of total trip time to the sum of total trip time and total idle time, providing a measure of how efficiently each taxi is used.
+  - Solution : It groups the data by taxi and computes the average trip time and idle time per taxi. Finally, utilization is calculated as the ratio of total trip time to the sum of total trip time and total idle time, providing a measure of how efficiently each taxi is used.
 2) Query 2: Average time for a taxi to find its next fare per destination borough
   - Description: The average time it takes for a taxi to find its next fare(trip) per destination borough. This
 can be computed by finding the difference of time, e.g. in seconds, between the drop off
@@ -77,5 +88,5 @@ of a trip and the pick up of the next trip.
   - Description: Count of the number of trips that started in one borough and ended in another one
   - Solution: This solution filters out rows with null values in the pickup_borough or dropoff_borough columns and then counts the number of trips where the pickup and dropoff locations are in different boroughs.
 
-All the queries are done after data enrichment, which means that to the taxi ride data set was added pick up and drop off borough names.
+To check that Q3 and Q4 have correct result, under "Miscellaneous" is check that Q3 and Q4 counts match the total number of trips.All the queries are done after data enrichment, which means that to the taxi ride data set was added pick up and drop off borough names.
 
