@@ -11,6 +11,40 @@ Students: Marielle Lepson, Karel Paan, Andre Ahuna, Aksel Õim
 This project analyzes New York City taxi trip data to calculate metrics like taxi utilization, time between trips, and patterns based on boroughs. 
 It uses Apache Spark for processing and tools like Sedona and Geopandas for geospatial analysis.
 
+## Data
+
+### Spatial data
+Spatial data (`nyc-boroughs.geojson`) is in geojson format, which is a popular way to contain spatial data.
+
+Spatial file contains borough areas of New York as polygons. A polygon is a blob like shape. 
+Each area belongs to a specific borough, thus we can compare the pickup and dropoff points and see in which borough they are located in.
+```
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "borough": " ... ",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [ ... ]
+        },
+        ...
+      },
+      ...
+    },
+    ...
+  ]
+}
+```
+The spatial data can be seen on this QGIS map, represented with blue:
+
+![Screenshot 2025-03-09 at 15.16.15.png](images/Screenshot%202025-03-09%20at%2015.16.15.png)
+
+### Trip data
+Trip data is originally in csv format, consists of 12 files, total size ~24GB.
+
 ## Requirements
 ### Software, libraries and data files
 Software:
@@ -31,17 +65,24 @@ Docker:
 
 Data Files:  
 Sample data from Moodle 
-- nyc-boroughs.geojson
-- Sample NYC Data.csv
+- `nyc-boroughs.geojson`
+- `Sample NYC Data.csv`
+  - `trip_time_in_secs` and `trip_distance` cols need to be removed from schema
+  - date format needs to be changed to `MM-dd-yy HH:mm`
 
 or   
 
 - http://www.andresmh.com/nyctaxitrips/  
 - Trips and fares data
 
+Example:
+
+![Screenshot 2025-03-09 at 15.22.54.png](images/Screenshot%202025-03-09%20at%2015.22.54.png)
+
 ### Setup
 
-Settings -> Resources must be set like this: ![Screenshot 2025-03-08 at 20.02.45.png](Screenshot%202025-03-08%20at%2020.02.45.png)
+Settings -> Resources must be set like this: 
+![Screenshot 2025-03-08 at 20.02.45.png](images/Screenshot%202025-03-08%20at%2020.02.45.png)
 
 * Add data to `data`folder
   - save trip_data folder from http://www.andresmh.com/nyctaxitrips/  (Current notebook version works with this)
@@ -51,7 +92,7 @@ Settings -> Resources must be set like this: ![Screenshot 2025-03-08 at 20.02.45
 docker compose -f compose.yml up -d
 ```
 * Notebooks are automatically hooked to Docker
-* Then queries can be ran from notebook.ipynb file.
+* Then queries can be run from `notebook.ipynb` file.
 
 Under the hood we are hooking `sedona` and `geopandas` packages to help work with geospatial data.
 
@@ -66,7 +107,8 @@ All the queries must be done after data enrichment, which means that to the taxi
 #### Before optimizing
 Before queries, it processes NYC taxi trip data and enriches it with borough-level geospatial information using Spark and Sedona. It starts by initializing a Spark session with Sedona for geospatial processing. Trip data is loaded from CSV files with a predefined schema, selecting only essential columns to optimize performance. NYC borough boundary data is read from a GeoJSON file, converted to WKT format, and transformed into a Spark DataFrame. A helper function converts longitude and latitude into WKT Points, which are then transformed into geometries for pickup and dropoff locations. The trip data is joined with borough boundaries using spatial intersections to determine the pickup and dropoff boroughs. Unnecessary columns are removed, and timestamps are formatted for consistency. Finally, the processed data, including medallion, pickup/dropoff boroughs, and timestamps, is written as a Parquet file for efficient storage and querying.
 
-Time :
+### Time :
+#### Before optimizing
 - Preprocessing: 16+ hours or more
 - Queries: 1 hour
 
@@ -100,14 +142,14 @@ The solution preprocesses the taxi trip data by sorting it by pickup time for ea
   - Solution : The data is grouped by medallion (taxi), and the average trip time and average idle time are calculated. The utilization is then computed as the ratio of total trip time to the sum of total trip time and idle time.
 2) Query 2: Average time for a taxi to find its next fare per destination borough
   - Description: The average time it takes for a taxi to find its next fare(trip) per destination borough. This
-can be computed by finding the difference of time, e.g. in seconds, between the drop off
-of a trip and the pick up of the next trip.
+can be computed by finding the difference of time, e.g. in seconds, between the dropoff
+of a trip and the pickup of the next trip.
   - Solution: The data is grouped by dropoff_borough, and the average idle time (the time between drop-off and the next pickup) is calculated to determine how long taxis wait for their next fare in each borough.
-4) Query 3: Number of trips that started and ended within the same borough
+3) Query 3: Number of trips that started and ended within the same borough
   - Description: Count of the number of trips that started and ended within the same borough,
   - Solution: The data is filtered to remove rows where either pickup_borough or dropoff_borough is null. Then, it counts the number of trips where the pickup_borough and dropoff_borough are the same.
-5) Query 4: Number of trips that started in one borough and ended in another
+4) Query 4: Number of trips that started in one borough and ended in another
   - Description: Count of the number of trips that started in one borough and ended in another one
   - Solution: The data is filtered to remove rows where either pickup_borough or dropoff_borough is null. Then, it counts the number of trips where pickup_borough and dropoff_borough are not the same.
 
-To check that Q3 and Q4 have correct result, under "Miscellaneous" is check that Q3 and Q4 counts match the total number of trips.
+To check that Q3 and Q4 have correct result, under "Miscellaneous" is a check that Q3 and Q4 counts match the total number of trips.
