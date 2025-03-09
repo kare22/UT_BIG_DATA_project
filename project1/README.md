@@ -44,7 +44,7 @@ or
 Settings -> Resources must be set like this: ![Screenshot 2025-03-08 at 20.02.45.png](Screenshot%202025-03-08%20at%2020.02.45.png)
 
 * Add data to `data`folder
-  - save trip_data folder from http://www.andresmh.com/nyctaxitrips/   
+  - save trip_data folder from http://www.andresmh.com/nyctaxitrips/  (Current notebook version works with this)
   - save  `nyc-boroughs.geojson` and `Sample NYC Data.csv`  
 * Run Docker compose file from project directory: 
 ```bash
