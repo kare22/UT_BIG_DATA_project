@@ -60,33 +60,54 @@ Under the hood we are hooking `sedona` and `geopandas` packages to help work wit
 Licensed under the Apache 2.0 License.
 
 ## Queries 
-All queries in notebook consists of comments of every step. 
-
 ### Data Enrichment
 All the queries must be done after data enrichment, which means that to the taxi ride data set was added pick up and drop off borough names.
 
 #### Before optimizing
-This part processes NYC taxi trip data and enriches it with borough-level geospatial information using Spark and Sedona. It starts by initializing a Spark session with Sedona for geospatial processing. Trip data is loaded from CSV files with a predefined schema, selecting only essential columns to optimize performance. NYC borough boundary data is read from a GeoJSON file, converted to WKT format, and transformed into a Spark DataFrame. A helper function converts longitude and latitude into WKT Points, which are then transformed into geometries for pickup and dropoff locations. The trip data is joined with borough boundaries using spatial intersections to determine the pickup and dropoff boroughs. Unnecessary columns are removed, and timestamps are formatted for consistency. Finally, the processed data, including medallion, pickup/dropoff boroughs, and timestamps, is written as a Parquet file for efficient storage and querying.
+Before queries, it processes NYC taxi trip data and enriches it with borough-level geospatial information using Spark and Sedona. It starts by initializing a Spark session with Sedona for geospatial processing. Trip data is loaded from CSV files with a predefined schema, selecting only essential columns to optimize performance. NYC borough boundary data is read from a GeoJSON file, converted to WKT format, and transformed into a Spark DataFrame. A helper function converts longitude and latitude into WKT Points, which are then transformed into geometries for pickup and dropoff locations. The trip data is joined with borough boundaries using spatial intersections to determine the pickup and dropoff boroughs. Unnecessary columns are removed, and timestamps are formatted for consistency. Finally, the processed data, including medallion, pickup/dropoff boroughs, and timestamps, is written as a Parquet file for efficient storage and querying.
+
+Time :
+- Preprocessing: 16+ hours or more
+- Queries: 1 hour
 
 #### After optimizing
-???
+- Set spark.driver.memory and spark.executor.memory to 8g for better performance.
+- Saves intermediate results (data.parquet, data_ready.parquet) to avoid reprocessing.
+- Skips expensive transformations if processed data already exists.´
+- Ensures data integrity and avoids slow schema inference with a predefined schema.
+- Drops rows with missing critical columns (pickup_longitude, dropoff_longitude, etc.).
+- Used .repartition(40) to improve parallel processing:   
+```bash
+df_geom = df_geom.repartition(40)
+df_trip_w_points = df_trip_w_points.repartition(40)
+```
+- Uses yyyy-MM-d HH:mm:ss format for Spark-compatible timestamp conversion.
+- Borough data (df_geom) is repartitioned instead of broadcasted for better scalability.
+- Removes unnecessary columns before joins to reduce memory usage. Drop rows where col is NULL. 
+- Stores df_final in Parquet format for faster future reads.
 
-### Dealing with queries
-The solution preprocesses the taxi trip data by sorting it by pickup time for each taxi (medallion) and calculating the idle time between consecutive trips. It then filters out invalid idle times (negative or greater than 4 hours). 
+Time:
+- Preprocessing: 1-2 hours
+- Queries: 5 minutes
+
+
+### Queries explanation
+All the queries are done after data enrichment, which means that to the taxi ride data set was added pick up and drop off borough names.
+
+The solution preprocesses the taxi trip data by sorting it by pickup time for each taxi (medallion) and calculating the idle time between consecutive trips. It then filters out invalid idle times (negative or greater than 4 hours). After optimization, the preprocessing uses advanced group-by with window functions.
 1) Query 1: Utilization per taxi/driver
   - Description : Compute the fraction of time that a cab is on the road and occupied.
-  - Solution : It groups the data by taxi and computes the average trip time and idle time per taxi. Finally, utilization is calculated as the ratio of total trip time to the sum of total trip time and total idle time, providing a measure of how efficiently each taxi is used.
+  - Solution : The data is grouped by medallion (taxi), and the average trip time and average idle time are calculated. The utilization is then computed as the ratio of total trip time to the sum of total trip time and idle time.
 2) Query 2: Average time for a taxi to find its next fare per destination borough
   - Description: The average time it takes for a taxi to find its next fare(trip) per destination borough. This
 can be computed by finding the difference of time, e.g. in seconds, between the drop off
 of a trip and the pick up of the next trip.
-  - Solution: This solution calculates the average idle time (in seconds) before the next ride for each destination borough by grouping the data by dropoff_borough and averaging the idle_time, converting it from milliseconds to seconds.
+  - Solution: The data is grouped by dropoff_borough, and the average idle time (the time between drop-off and the next pickup) is calculated to determine how long taxis wait for their next fare in each borough.
 4) Query 3: Number of trips that started and ended within the same borough
   - Description: Count of the number of trips that started and ended within the same borough,
-  - Solution: This solution filters out rows where either pickup_borough or dropoff_borough is null and then counts the number of trips where the pickup and dropoff locations are in the same borough. 
+  - Solution: The data is filtered to remove rows where either pickup_borough or dropoff_borough is null. Then, it counts the number of trips where the pickup_borough and dropoff_borough are the same.
 5) Query 4: Number of trips that started in one borough and ended in another
   - Description: Count of the number of trips that started in one borough and ended in another one
-  - Solution: This solution filters out rows with null values in the pickup_borough or dropoff_borough columns and then counts the number of trips where the pickup and dropoff locations are in different boroughs.
+  - Solution: The data is filtered to remove rows where either pickup_borough or dropoff_borough is null. Then, it counts the number of trips where pickup_borough and dropoff_borough are not the same.
 
-To check that Q3 and Q4 have correct result, under "Miscellaneous" is check that Q3 and Q4 counts match the total number of trips.All the queries are done after data enrichment, which means that to the taxi ride data set was added pick up and drop off borough names.
-
+To check that Q3 and Q4 have correct result, under "Miscellaneous" is check that Q3 and Q4 counts match the total number of trips.
