@@ -51,9 +51,7 @@ Settings -> Resources must be set like this: ![Screenshot 2025-03-08 at 20.02.45
 docker compose -f compose.yml up -d
 ```
 * Notebooks are automatically hooked to Docker
-* Run `0_data_enrichment.ipynb` to get the enriched data in mnt/output
-* To use the data load out load it from `output/output.parquet`
-* Then queries can be ran from notebooks/1_queries.ipynb file.
+* Then queries can be ran from notebook.ipynb file.
 
 Under the hood we are hooking `sedona` and `geopandas` packages to help work with geospatial data.
 
