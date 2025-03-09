@@ -73,7 +73,7 @@ Time :
 #### After optimizing
 - Set spark.driver.memory and spark.executor.memory to 8g for better performance.
 - Saves intermediate results (data.parquet, data_ready.parquet) to avoid reprocessing.
-- Skips expensive transformations if processed data already exists.´
+- Skips expensive transformations if processed data already exists.
 - Ensures data integrity and avoids slow schema inference with a predefined schema.
 - Drops rows with missing critical columns (pickup_longitude, dropoff_longitude, etc.).
 - Used .repartition(40) to improve parallel processing:   
