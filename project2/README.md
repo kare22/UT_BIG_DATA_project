@@ -1,3 +1,5 @@
+* Copy data to `data` folder
+  * I created a 10k sample of `sorted_data.csv` called `sample_sorted_data.csv`
 * Start composer
 * run `kafka-topic.sh` locally
 * run `kafka-producer.sh` locally
