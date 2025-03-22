@@ -19,8 +19,9 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     depends_on:
       - zookeeper
-  pyspark:
-    image: quay.io/jupyter/pyspark-notebook:spark-3.5.3 # image name and tag
+
+  pyspark-kafka:
+    image: pyspark-kafka:0.0.1 # image name and tag
     container_name: pyspark_project2 # custom container name
     command: >
       bash -c "
@@ -29,8 +30,6 @@ services:
       pip install geopandas &&
       wget https://repo1.maven.org/maven2/org/apache/sedona/sedona-spark-shaded-3.0_2.12/1.6.1/sedona-spark-shaded-3.0_2.12-1.6.1.jar -P /home/jovyan/jars/ &&
       wget https://repo1.maven.org/maven2/org/datasyslab/geotools-wrapper/1.7.0-28.5/geotools-wrapper-1.7.0-28.5.jar -P /home/jovyan/jars/ &&
-      wget https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.12/3.5.0/spark-sql-kafka-0-10_2.12-3.5.0.jar -P /home/jovyan/jars/ &&
-      wget https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/3.5.1/kafka-clients-3.5.1.jar -P /home/jovyan/jars/ &&
       start-notebook.sh --NotebookApp.token=''
       "
     ports:
@@ -41,15 +40,5 @@ services:
       - "./notebook.ipynb:/home/jovyan/notebook.ipynb"
       - "./kafka-producer.py:/home/jovyan/kafka-producer.py"
       - "../data/:/home/jovyan/data/" # map a local folder to the Jupyter workspace folder
-    depends_on:
-      - kafka
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - "8089:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
       - kafka

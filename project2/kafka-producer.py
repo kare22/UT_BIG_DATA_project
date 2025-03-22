@@ -15,7 +15,7 @@ producer = KafkaProducer(
 print('init producer')
 
 # Load taxi trip dataset (replace with actual dataset path)
-df = pd.read_csv("./data/sample_sorted_data.csv")  # Adjust the path if needed
+df = pd.read_csv("./data/sample_sorted_data.csv", header=None) # Adjust the path if needed
 
 print('init df')
 
