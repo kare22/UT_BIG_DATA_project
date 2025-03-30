@@ -52,7 +52,7 @@ Software:
 - Docker
 
 Data Files:  
-- A CSV file with the previously outlined schema, named `/data/sample_sorted_data.csv`
+- A CSV file with the previously outlined schema, named `/data/sample_sorted_data.csv`.
 
 ### Setup
 - Build the docker container with `docker build . -t "pyspark-kafka:0.0.1"`.
@@ -64,11 +64,11 @@ Data Files:
 
 ## Queries 
 
-### Setup
-
 ### Data Cleansing and Setup
+The data is received from kafka as a json string without column names. For working with the data using dataframes, a schema is enforced on the data stream. After that, the stream is purged from malformed entries (missing identifiers and/or location data). The data stream is written to an in-memory table.
 
 ### Query 1: Frequent routes
+
 
 #### Part 1 
 Find the top 10 most frequent routes during the last 30 minutes.
