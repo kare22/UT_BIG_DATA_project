@@ -1,5 +1,4 @@
 # BigData 2025 Projects Repository
-
 ![TartuLogo](../static/logo_ut_0.png)
 
 Project [Big Data](https://courses.cs.ut.ee/2025/bdm/spring/Main/HomePage) is provided by [University of Tartu](https://courses.cs.ut.ee/).
@@ -7,11 +6,9 @@ Project [Big Data](https://courses.cs.ut.ee/2025/bdm/spring/Main/HomePage) is pr
 Students: Marielle Lepson, Karel Paan, Andre Ahuna, Aksel Õim
 
 # Project 2: DESB GRAND CHALLENGE 2015
-
 This project analyzes New York taxi to identify recent frequent routes and high-profit regions. The tasks and data are based on the [DEBS 2015 Grand Challenge](https://debs.org/grand-challenges/2015/).
 
 ## Data
-
 The project's dataset is 2013 New York City taxi drive reports.
 
 The full 2013 New York City taxi data is a 12 GB CSV file obtainable via this [link](https://drive.google.com/file/d/0B4zFfvIVhcMzcWV5SEQtSUdtMWc/view?usp=sharing).
@@ -19,7 +16,6 @@ The full 2013 New York City taxi data is a 12 GB CSV file obtainable via this [l
 A subset of that data detailing the first 20 days can be downloaded [here](https://drive.google.com/file/d/0B0TBL8JNn3JgTGNJTEJaQmFMbk0/view?usp=sharing).
 
 ### Trip data 
-
 Columns:
 - medallion **(necessary)**
   - example value: `5EE2C4D3BF57BDB455E74B03B89E43A7`
@@ -49,21 +45,16 @@ Columns:
 - tolls_amount
 - total_amount
 
-
 ## Requirements
-### Software, libraries and data files
 
+### Software, libraries and data files
 Software:
 - Docker
-
-Docker:
-- Docker Compose
 
 Data Files:  
 - A CSV file with the previously outlined schema, named `/data/sample_sorted_data.csv`
 
 ### Setup
-
 - Build the docker container with `docker build . -t "pyspark-kafka:0.0.1"`.
 - Start the container with `docker compose up -d`.
 - Run `kafka-topic.sh` locally. This will register the kafka topic.
@@ -71,14 +62,27 @@ Data Files:
     - On Windows, the shell script might not execute correctly. In that case, run `docker exec -it pyspark_project2 python /home/jovyan/kafka-producer.py` directly from the terminal.
     - To check if messages are sent to kafka, run `kafka-check-messages.sh`.
 
-### License
-
-Licensed under the Apache 2.0 License.
-
 ## Queries 
 
+### Setup
+
+### Data Cleansing and Setup
+
+### Query 1: Frequent routes
+
+#### Part 1 
+Find the top 10 most frequent routes during the last 30 minutes.
+
+#### Part 2
+The previous query, but it must be updated whenever the top 10 changes.
+
+### Query 2: Profitable Areas
+
+#### Part 1
+Find the top 10 most profitable areas during the last 30 minutes.
+
+#### Part 2
 
 
-### Queries explanation
-
-...
+### License
+Licensed under the Apache 2.0 License.
