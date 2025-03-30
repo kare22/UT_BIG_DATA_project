@@ -75,7 +75,8 @@ The data is received from kafka as a json string without column names. For worki
   - Solution : The data is broken into 30-minute windows based on the "dropoff_datetime" to analyze routes over short periods. It is then grouped by the start and end locations (cell IDs) within each window. To handle any delayed data, a 30-minute watermark is applied, ensuring all relevant events are considered. Afterward, the solution counts how many times each route appears and sorts the results to show the most frequent routes at the top.
 
 #### Part 2
-The previous query, but it must be updated whenever the top 10 changes.
+  - Description: The previous query, but it must be updated whenever the top 10 changes.
+  - Solution : process a stream of taxi trip data by dividing it into 30-minute windows and grouping the trips by start and end locations. A watermark handles any delayed data. A function calculates the delay by comparing the current time with the latest event’s processing time and retrieves the top 10 most frequent routes. The data is processed by adding a processing time column and determining the start and end cell IDs. The stream is filtered to exclude null values, and the top frequent routes are updated in memory. A trigger processes the data every second, keeping the top 10 routes up to date. The results are stored in a table with the latest route information and delay for each event.
 
 ### Query 2: Profitable Areas
 
