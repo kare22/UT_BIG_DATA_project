@@ -71,7 +71,8 @@ The data is received from kafka as a json string without column names. For worki
 
 
 #### Part 1 
-Find the top 10 most frequent routes during the last 30 minutes.
+  - Description : Compute the top 10 most frequent routes during the last 30 minutes.
+  - Solution : The data is broken into 30-minute windows based on the "dropoff_datetime" to analyze routes over short periods. It is then grouped by the start and end locations (cell IDs) within each window. To handle any delayed data, a 30-minute watermark is applied, ensuring all relevant events are considered. Afterward, the solution counts how many times each route appears and sorts the results to show the most frequent routes at the top.
 
 #### Part 2
 The previous query, but it must be updated whenever the top 10 changes.
