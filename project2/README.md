@@ -27,32 +27,8 @@ Students: Marielle Lepson, Karel Paan, Andre Ahuna, Aksel Õim
 Smaller sorted data set ...
 
 ### Trip data
-Trip data is originally in csv format, consists of 12 files, total size ~24GB.
+...
 
-Columns (in original order):
-- medallion **(necessary)**
-  - example value: `B2EBE2244AAE6FD27E9BF259447F03E9`
-- hack_license
-- vendor_id
-- rate_code
-- store_and_fwd_flag
-- pickup_datetime **(necessary)**
-  - example value: `2013-07-12 21:20:21`
-- dropoff_datetime **(necessary)**
-  - example value: `2013-07-12 21:31:24`
-- passenger_count
-- trip_time_in_secs
-- trip_distance
-- pickup_longitude **(necessary)**
-  - example value: `-73.974846`
-- pickup_latitude **(necessary)**
-  - example value: `40.742138`
-- dropoff_longitude **(necessary)**
-  - example value: `-73.950325`
-- dropoff_latitude **(necessary)**
-  - example value: `40.786446`
-
-There is a total of 173179759 rows, out of which 173176321 are usable (contain all values for necessary cols). 
 
 ## Requirements
 ### Software, libraries and data files
