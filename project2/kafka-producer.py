@@ -32,6 +32,6 @@ for _, row in df.iterrows():
         print(f"Error sending message: {e}")
 
     # Simulate delay (e.g., sending 1 trip per second)
-    time.sleep(1)
+    time.sleep(.1)
 
 producer.close()
