@@ -129,19 +129,17 @@ Solution:
 It configures memory settings and sets Spark SQL extensions for Delta operations.
 - In cell 2, we import necessary functions and classes for graph analysis using GraphFrames in PySpark. We import GraphFrame for graph operations and seceral PySpark SQL functions like
 col, coalesce, lit and sum for dataframe transformations.
-- In cell 3, we read the CSV file ( 2009.csv) located in the /.data directory into the spark dataframe. Th header=True, tells Spark to
-- read the first row as a header. 
+- In cell 3, we read the CSV file ( 2009.csv) located in the /.data directory into the spark dataframe. Th header=True, tells Spark to read the first row as a header.
+- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the directed edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network.
+- In cell 5, we persist the GraphFrame in memory using gf.persist(), this improves performance for repeated graph operations. The vertices (v) contain a single column id and edges contain two columns src and dst.
+`GraphFrame(v:[id: string], e:[src: string, dst: string])` 
  
-Analysis: It takes less than 30 seconds to load the query 0. The CSV file is successfully read into dataframe.
-All the necessary functions, classes and Graphframes are imported. The data is ready for defining vertices and edges from flight routes, such as using airport codes for nodes and flights for directed edges. 
+Analysis: The CSV file is successfully read into dataframe.
+All the necessary functions, classes and Graphframes are imported. A graph object is created, where nodes represent airports (using their codes) and edges represent direct flights between them.
 
 ### Query 1
-Description: Compute different statistics : in-degree, out-degree, total degree and triangle
-count.
+Description: Compute different statistics : in-degree, out-degree, total degree and triangle count.
 Solution: 
-- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the directed edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network. 
-- In cell 5, we persist the GraphFrame in memory using gf.persist(), this improves performance for repeated graph operations. The vertices (v) contain a single column id and edges contain two columns src and dst.
-`GraphFrame(v:[id: string], e:[src: string, dst: string])`
 - In cell 6, gf.InDegrees returns a dataframe where each row contains an airport (by id) and its in-degree, which is the number of incoming flights. Meaning how many times it appeared as a destination.
 - In cell 7, gf.OutDegrees returns a dataframe with each airport (id) and its out-degree, representing how many flights went out from airports.
 - In cell 8, we calculate the total degree for each airport. We first do outer join on in_degree and out_degree dataframes using airport id. This means that airports appear only in one. Then we use coalesce function to replace any null values. This is important for airports missing either in-degree or out-degree. Then we display each airports inDegree, outDegree and totalDegree.
