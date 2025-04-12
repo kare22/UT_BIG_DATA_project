@@ -174,6 +174,7 @@ Analysis: The graph contains a total number of 16 015 unique triangles. This rep
 
 ### Query 3
 Description: Compute a centrality measure of your choice natively on Spark using Graphframes.
+
 Solution: 
 In here we chose eigenvector centrality, which measures the influence of an airport in a network based on the importance of its neightbors. 
 - In cell 11, convert the directed graph to undirected graph by adding reverse edges. Then initialize all
