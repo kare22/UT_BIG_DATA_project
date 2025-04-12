@@ -150,18 +150,23 @@ Solution:
 - In cell 9, we compute the triangle count for each airport in the graph.  triangleCount() runs the triangle count algorithm, which finds the count of triangles each airport is part of. A triangle represents closed loop where all three airports are directy connected to each other by flights. Then we display each airport along with the number of triangles it participates in. This helps to identify highly interconnected airports. 
 
 Analysis:
-I added images here to visualize results. These tables in images are not sorted, but for analysing I used orderBy() to visualize the highest and lowest counts results. 
-1) In-degree
+
+**NB: I added images here to visualize the results. These tables in the images are NOT sorted, but are included for visual representation of each part.**
+
+**For analysis, I used `orderBy()` with `ascending=False` or `ascending=True` to sort and visualize the highest and lowest counts accurately.**
+
+
+1) In-degree - 
 This table shows the number of incoming flights for each airport. After sorting, the highest in-degree is at ATL with 417 457 incoming flights, followed by ORD (313 769) and DFW (264 398). JFK has 119 571 and BOS has 110 463, also ranking among the busiest. The lowest in-degree is seen at PIR with just 3 flights and others like RHI (41) and BJI (55) show very limited inbound traffic.
 ![indegree.png](img/indegree.png)
-3) Out-degree
+3) Out-degree - 
 This table shows the number of outgoing flights per airport. After sorting, the highest out-degree again belongs to ATL with 417 449 flights, followed by ORD (313 848) and DFW (264 396). JFK (119 574) and BOS (110 460) continue to appear among the busiest. On the lower end, PIR (3), RHI (41), and BJI (54) show the lowest out-degree, showing minimal departures.
 ![outdegree.png](img/outdegree.png)
-5) Total degree
+5) Total degree - 
 This table reflects the overall activity (incoming + outgoing) per airport.  After sorting, ATL has the highest total degree of 834 906, making it the most active airport in the dataset. Other high-traffic airports are ORD (627 617) and DFW (528 794). But, PIR has the lowest total degree at 6, followed by RHI (82) and BJI (109), which shows extremely limited overall flight activity.
 
 ![totaldegree.png](img/totaldegree.png)
-7) Triangle count
+7) Triangle count - 
 This table shows how many three-airport roundtrip loops (triangles) each airport is part of, revealing local connectivity and network density. After sorting, The highest triangle count is at ATL (1761), followed by ORD (1678) and DFW (1503). Airports like MEM (1105), JFK (942), and BOS (860) also show strong local connectivity. At the same time, many airports (TEX, GST and EKO) have a triangle count of 0, meaning they are not part of any interconnected clusters.
 ![trianglecount.png](img/trianglecount.png)
 
