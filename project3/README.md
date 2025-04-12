@@ -206,8 +206,8 @@ Description: Find the group of the most connected airports
 Solution: 
 - In cell 15, we compute the degree centrality by summing each airorts in-degree and out-degree. This gives direct flight connections per airport
 
-Analysis: The airport with the highest degree centrality are ATL (834 906), ORD (627 617) and DFW (528 794).
-These airports are the most directly connected in the entire network, meaning they are either receiveing or sending out the largest amount of flights. These are the major airports or bottlenecks are are crucial for the working air traffix in U.S.
+Analysis: The most connected airports are ATL (834 906), ORD (627 617) and DFW (528 794).
+These airports are the most directly connected in the entire network, meaning they are either receiveing or sending out the largest amount of flights. These offer the most direct flight options aswell.  These airports are the major airports or bottlenecks are are crucial for the working air traffix in U.S.
 This measure shows how well-connected the airport is overall. Unline other methods before, it does not consider the importance of connected nodes, but rather just the total number of connections. 
 
 ![degreecentrality.png](img/degreecentrality.png)
