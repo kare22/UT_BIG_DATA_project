@@ -169,12 +169,22 @@ This table shows how many three-airport roundtrip loops (triangles) each airport
 Description: Compute the total number of triangles in the graph.
 Solution: 
 - In cell 10, we compute the total number of triangles using the triangle count DataFrame. Because each triangle is counted once at each of its three nodes (vertices), we divide the total sum by 3 to avoid triple-counting.
+
 Analysis: The graph contains a total number of 16 015 unique triangles. This represents a set of three interconnected airports. These triangles show closed flight routine among 3-airports. 
 
 ### Query 3
 Description: Compute a centrality measure of your choice natively on Spark using Graphframes.
 Solution: 
-Analysis:
+In here we chose eigenvector centrality, which measures the influence of an airport in a network based on the importance of its neightbors. 
+- In cell 11, convert the directed graph to undirected graph by adding reverse edges. Then initialize all
+vertex scores to 1, for a iterative computation.
+- In cell 12, perform 10 iterations all together, where each node is updating its score based on the sum of the neighbors scores. After each iteration, scores are normalized to keep values stable.
+- In cell 13, display the results sorted by descending order to show the most central airports.
+  
+Analysis: This analysis shows which airports are the most influencial in the network, based on not connections count but because they have many connections to other very important airports. 
+
+The top airports by eigenvector centrality measure are ATL (0.01876), ORD (0.01810) and DFW (0.01694).
+These airports are all very well connected to other highly influential airports. This might be because these airports are at the center of highly connected regions. This confirms that these airports are busy, but also connect to other most influencial airports across country. Other airports are DTW, DEN, MSP and IAH, which also show roles in dense and highly connected areas. These results align well with total degree and triangle count rankings. 
 
 ### Query 4
 Description: Implement the PageRank algorithm natively on Spark using Graphframes.
