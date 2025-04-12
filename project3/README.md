@@ -101,8 +101,7 @@ Columns:
 - **LATE_AIRCRAFT_DELAY**: Delay due to a previous flight arriving late
   - *Example:* `null` or `20.0`
 
-- **Unnamed: 27**: Extra column with all values as `null` 
-
+- **Unnamed: 27**: Extra column with all values as `null`
 
 ## Requirements
 
@@ -114,6 +113,8 @@ Software:
 
 Data Files:  
 - A CSV file, named `/data/2009.csv`. The file size is 802,2 MB.
+
+![folder.png](img/folder.png)
 
 ### Setup
 - Save csv file to /data location
@@ -132,10 +133,12 @@ col, coalesce, lit and sum for dataframe transformations.
 - In cell 3, we read the CSV file ( 2009.csv) located in the /.data directory into the spark dataframe. Th header=True, tells Spark to read the first row as a header.
 - In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the directed edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network.
 - In cell 5, we persist the GraphFrame in memory using gf.persist(), this improves performance for repeated graph operations. The vertices (v) contain a single column id and edges contain two columns src and dst.
-`GraphFrame(v:[id: string], e:[src: string, dst: string])` 
+`GraphFrame(v:[id: string], e:[src: string, dst: string])`
  
 Analysis: The CSV file is successfully read into dataframe.
 All the necessary functions, classes and Graphframes are imported. A graph object is created, where nodes represent airports (using their codes) and edges represent direct flights between them.
+
+![dataframe.png](img/dataframe.png)
 
 ### Query 1
 Description: Compute different statistics : in-degree, out-degree, total degree and triangle count.
@@ -146,15 +149,20 @@ Solution:
 - In cell 9, we compute the triangle count for each airport in the graph.  triangleCount() runs the triangle count algorithm, which finds the count of triangles each airport is part of. A triangle represents closed loop where all three airports are directy connected to each other by flights. Then we display each airport along with the number of triangles it participates in. This helps to identify highly interconnected airports. 
 
 Analysis:
+I added images here to visualize some results. These tables are not sorted, but for analysing I used orderBy() to visualize the highest and lowest counts results. 
 1) In-degree
-This table shows the number of incoming flights for each airport. JFK has 119 571 and BOS does have 110 463 incoming flights. This means these are the major airports and are accepting the highest value of flights. Smaller airports like KTN (2373) or WRG (722) have less incoming flights, showing limited connectivity. 
-2) Out-degree
-This table shows the number of outgoing flight per airport. The out-degree has similar results based on the most popular airports with JFK (119 574) and BOS (110 460) outgoing flights.
-3) Total degree
-This table shows the overall activity for each airport. ATL airport shows a total degree of 834 906, which confirms that it the most active and busy airport. Airports ADK and AKN have lower totals shwoing limited service.
-4) Triangle count
-This table shows how many three-airport roundtrip loops each airport is part of, indicating the density .
-The highest triangle counts are for MEM(1105), BOS (860) and JFK (942) suggesting that these are well-connected not just around the world but also locally. Some airports have 0 triangles meaning they serve separate routes without forming connected clusters. 
+This table shows the number of incoming flights for each airport. After sorting, the highest in-degree is at ATL with 417 457 incoming flights, followed by ORD (313 769) and DFW (264 398). JFK has 119 571 and BOS has 110 463, also ranking among the busiest. The lowest in-degree is seen at PIR with just 3 flights and others like RHI (41) and BJI (55) show very limited inbound traffic.
+![indegree.png](img/indegree.png)
+3) Out-degree
+This table shows the number of outgoing flights per airport. After sorting, the highest out-degree again belongs to ATL with 417 449 flights, followed by ORD (313 848) and DFW (264 396). JFK (119 574) and BOS (110 460) continue to appear among the busiest. On the lower end, PIR (3), RHI (41), and BJI (54) show the lowest out-degree, showing minimal departures.
+![outdegree.png](img/outdegree.png)
+5) Total degree
+This table reflects the overall activity (incoming + outgoing) per airport.  After sorting, ATL leads with a total degree of 834 906, making it the most active airport in the dataset. Other high-traffic airports are ORD (627 617) and DFW (528 794). But, PIR has the lowest total degree at 6, followed by RHI (82) and BJI (109), which shows extremely limited overall flight activity.
+
+![totaldegree.png](img/totaldegree.png)
+7) Triangle count
+This table shows how many three-airport roundtrip loops (triangles) each airport is part of, revealing local connectivity and network density. After sorting, The highest triangle count is at ATL (1761), followed by ORD (1678) and DFW (1503). Airports like MEM (1105), JFK (942), and BOS (860) also show strong local connectivity. At the same time, many airports — including TEX, GST, EKO, BJI, and RHI — have a triangle count of 0, meaning they are not part of any interconnected clusters.
+![trianglecount.png](img/trianglecount.png)
 
 
 ### Query 2
