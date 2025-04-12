@@ -131,7 +131,7 @@ Solution:
 - In the first cell, the code initialized a PySpark SparkSession with Delta Lake support and includes GraphFrames library for graph processing. It configures memory settings and sets Spark SQL extensions for Delta operations.
 - In cell 2, we import necessary functions and classes for graph analysis using GraphFrames in PySpark. We import GraphFrame for graph operations and PySpark SQL functions like col, coalesce, lit and sum for dataframe transformations.
 - In cell 3, we read the CSV file ( 2009.csv) located in the /.data directory into the spark dataframe. The header=True, tells Spark to read the first row as a header.
-- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network.
+- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network. Cache vertices and edges, so that they are stored in memory and don't have to be recomputed again. 
 - In cell 5, we persist the GraphFrame in memory using gf.persist(), this improves performance for repeated graph operations. The vertices (v) contain a single column id and edges contain two columns src and dst.
 `GraphFrame(v:[id: string], e:[src: string, dst: string])`
  
@@ -144,10 +144,10 @@ Example of displayed data before creating graph:
 ### Query 1
 Description: Compute different statistics : in-degree, out-degree, total degree and triangle count.
 Solution: 
-- In cell 6, gf.InDegrees returns a dataframe where each row contains an airport (by id) and its in-degree, which is the number of incoming flights. Meaning how many times it appeared as a destination.
-- In cell 7, gf.OutDegrees returns a dataframe with each airport (id) and its out-degree, representing how many flights went out from airports.
+- In cell 6, Use gf.InDegrees to return the expected results for testing purposes. Indegrees returns a dataframe where each row contains an airport (by id) and its in-degree, which is the number of incoming flights. Meaning basically how many times it appeared as a destination. Compute the actual value by grouping the edges in dataframe by destination and counting all occurances. Compare with expected values. 
+- In cell 7, Use gf.OutDegrees to return the expected out-degrees counts to view how many flights leave each airport. Then manually compute the out-degrees, by grouping airports on src location and counting all. I compare the expected results with manual results to review the accuracy.
 - In cell 8, we calculate the total degree for each airport. We first do outer join on in_degree and out_degree dataframes using airport id. This means that airports appear only in one. Then we use coalesce function to replace any null values. This is important for airports missing either in-degree or out-degree. Then we display each airports inDegree, outDegree and totalDegree.
-- In cell 9, we compute the triangle count for each airport in the graph.  triangleCount() runs the triangle count algorithm, which finds the count of triangles each airport is part of. A triangle represents closed loop where all three airports are directy connected to each other by flights. Then we display each airport along with the number of triangles it participates in. This helps to identify highly interconnected airports. 
+- In cell 9, compute the triangle count for each airport in the graph.  triangleCount() runs the triangle count algorithm, which finds the count of triangles each airport is part of. A triangle represents closed loop where all three airports are directy connected to each other by flights. Then we display each airport along with the number of triangles it participates in. This helps to identify highly interconnected airports. 
 
 Analysis:
 
