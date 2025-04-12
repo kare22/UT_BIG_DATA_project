@@ -133,14 +133,30 @@ col, coalesce, lit and sum for dataframe transformations.
 - read the first row as a header. 
  
 Analysis: It takes less than 30 seconds to load the query 0. The CSV file is successfully read into dataframe.
-All the necessary functions, classes and Graphframes are imported. The data is ready for defining vertices and edges from flight routes,
-such as using airport codes for nodes and flights for directed edges. 
+All the necessary functions, classes and Graphframes are imported. The data is ready for defining vertices and edges from flight routes, such as using airport codes for nodes and flights for directed edges. 
 
 ### Query 1
 Description: Compute different statistics : in-degree, out-degree, total degree and triangle
 count.
 Solution: 
+- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the directed edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network. 
+- In cell 5, we persist the GraphFrame in memory using gf.persist(), this improves performance for repeated graph operations. The vertices (v) contain a single column id and edges contain two columns src and dst.
+`GraphFrame(v:[id: string], e:[src: string, dst: string])`
+- In cell 6, gf.InDegrees returns a dataframe where each row contains an airport (by id) and its in-degree, which is the number of incoming flights. Meaning how many times it appeared as a destination.
+- In cell 7, gf.OutDegrees returns a dataframe with each airport (id) and its out-degree, representing how many flights went out from airports.
+- In cell 8, we calculate the total degree for each airport. We first do outer join on in_degree and out_degree dataframes using airport id. This means that airports appear only in one. Then we use coalesce function to replace any null values. This is important for airports missing either in-degree or out-degree. Then we display each airports inDegree, outDegree and totalDegree.
+- In cell 9, we compute the triangle count for each airport in the graph.  triangleCount() runs the triangle count algorithm, which finds the count of triangles each airport is part of. A triangle represents closed loop where all three airports are directy connected to each other by flights. Then we display each airport along with the number of triangles it participates in. This helps to identify highly interconnected airports. 
+
 Analysis:
+1) In-degree
+This table shows the number of incoming flights for each airport. JFK has 119 571 and BOS does have 110 463 incoming flights. This means these are the major airports and are accepting the highest value of flights. Smaller airports like KTN (2373) or WRG (722) have less incoming flights, showing limited connectivity. 
+2) Out-degree
+This table shows the number of outgoing flight per airport. The out-degree has similar results based on the most popular airports with JFK (119 574) and BOS (110 460) outgoing flights.
+3) Total degree
+This table shows the overall activity for each airport. ATL airport shows a total degree of 834 906, which confirms that it the most active and busy airport. Airports ADK and AKN have lower totals shwoing limited service.
+4) Triangle count
+This table shows how many three-airport roundtrip loops each airport is part of, indicating the density .
+The highest triangle counts are for MEM(1105), BOS (860) and JFK (942) suggesting that these are well-connected not just around the world but also locally. Some airports have 0 triangles meaning they serve separate routes without forming connected clusters. 
 
 
 ### Query 2
