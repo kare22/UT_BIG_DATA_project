@@ -186,11 +186,18 @@ Analysis: This analysis shows which airports are the most influencial in the net
 
 The top airports by eigenvector centrality measure are ATL (0.01876), ORD (0.01810) and DFW (0.01694).
 These airports are all very well connected to other highly influential airports. This might be because these airports are at the center of highly connected regions. This confirms that these airports are busy, but also connect to other most influencial airports across country. Other airports are DTW, DEN, MSP and IAH, which also show roles in dense and highly connected areas. These results align well with total degree and triangle count rankings. 
+![centrality.png](img/centrality.png)
+
 
 ### Query 4
 Description: Implement the PageRank algorithm natively on Spark using Graphframes.
+
 Solution: 
-Analysis:
+- In cell 14, we apply the pageRank function from GraphFrames, which calculates the importance of each airport based on how many other important airportant point to it. We reset the probability to 0.15 and then run the algorithm for 5 iterations. Then we sort he results in descending order by the pagerank score to find the most influencial. 
+
+Analysis: The top airport are ATL (19.51), ORD (13.20) and DFW(12.01). Other big airports like LAX also rank high, confirming their importance in air network. These results match and are consistent with previous results. But this shows that being connected to well-ranked airports is more important than just having many connections. Good example for this is JFK airport, which had total degree of 239 145, but pagerank is 4.57 which is quite low. Then SLC which total degree is 263 368 and pagerank is 7.21. This shows that SLC is more tightly connected to other highly ranked airports than JFK. 
+
+![pagerank.png](img/pagerank.png)
 
 ### Query 5
 Description: Find the group of the most connected airports
