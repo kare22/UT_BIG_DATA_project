@@ -20,88 +20,89 @@ The full data file can be obtained via this [link](https://drive.google.com/file
 
 ### Flight Interconnected Data 
 Columns:
-- **FL_DATE**: Flight date, represents the date of the flight
-  - *Example:* `2009-01-01`
 
-- **OP_CARRIER**: Carrier code, the airline operating the flight
-  - *Example:* `XE`
+FL_DATE: Flight date, represents the date of the flight  
+Example: 2009-01-01
 
-- **OP_CARRIER_FL_NUM**: Flight number assigned by the carrier
-  - *Example:* `1204`
+OP_CARRIER: Carrier code, the airline operating the flight  
+Example: XE
 
-- **ORIGIN**: Departure airport code
-  - *Example:* `DCA`
+OP_CARRIER_FL_NUM: Flight number assigned by the carrier  
+Example: 1204
 
-- **DEST**: Arrival airport code
-  - *Example:* `EWR`
+ORIGIN: Departure airport code  
+Example: DCA
 
-- **CRS_DEP_TIME**: Scheduled departure time
-  - *Example:* `1100`
+DEST: Arrival airport code  
+Example: EWR
 
-- **DEP_TIME**: Actual departure time
-  - *Example:* `1058.0`
+CRS_DEP_TIME: Scheduled departure time  
+Example: 1100
 
-- **DEP_DELAY**: Departure delay in minutes. Negative if early
-  - *Example:* `-2.0`
+DEP_TIME: Actual departure time  
+Example: 1058.0
 
-- **TAXI_OUT**: Taxi-out time in minutes (gate to takeoff)
-  - *Example:* `18.0`
+DEP_DELAY: Departure delay in minutes. Negative if early  
+Example: -2.0
 
-- **WHEELS_OFF**: Time when wheels left the ground
-  - *Example:* `1116.0`
+TAXI_OUT: Taxi-out time in minutes (gate to takeoff)  
+Example: 18.0
 
-- **WHEELS_ON**: Time when wheels touched down
-  - *Example:* `1158.0`
+WHEELS_OFF: Time when wheels left the ground  
+Example: 1116.0
 
-- **TAXI_IN**: Taxi-in time in minutes 
-  - *Example:* `8.0`
+WHEELS_ON: Time when wheels touched down  
+Example: 1158.0
 
-- **CRS_ARR_TIME**: Scheduled arrival time
-  - *Example:* `1202`
+TAXI_IN: Taxi-in time in minutes  
+Example: 8.0
 
-- **ARR_TIME**: Actual arrival time
-  - *Example:* `1206.0`
+CRS_ARR_TIME: Scheduled arrival time  
+Example: 1202
 
-- **ARR_DELAY**: Arrival delay in minutes. Negative if early
-  - *Example:* `4.0`
+ARR_TIME: Actual arrival time  
+Example: 1206.0
 
-- **CANCELLED**: Whether the flight was canceled (1.0 = yes, 0.0 = no)
-  - *Example:* `0.0`
+ARR_DELAY: Arrival delay in minutes. Negative if early  
+Example: 4.0
 
-- **CANCELLATION_CODE**: Reason for cancellation
-  - *Example:* `A` (Carrier)
+CANCELLED: Whether the flight was canceled (1.0 = yes, 0.0 = no)  
+Example: 0.0
 
-- **DIVERTED**: Whether the flight was diverted (1.0 = yes, 0.0 = no) 
-  - *Example:* `0.0`
+CANCELLATION_CODE: Reason for cancellation  
+Example: A (Carrier)
 
-- **CRS_ELAPSED_TIME**: Scheduled flight duration in minutes
-  - *Example:* `62.0`
+DIVERTED: Whether the flight was diverted (1.0 = yes, 0.0 = no)  
+Example: 0.0
 
-- **ACTUAL_ELAPSED_TIME**: Actual flight duration in minutes
-  - *Example:* `68.0`
+CRS_ELAPSED_TIME: Scheduled flight duration in minutes  
+Example: 62.0
 
-- **AIR_TIME**: Time spent in the air (minutes)
-  - *Example:* `42.0`
+ACTUAL_ELAPSED_TIME: Actual flight duration in minutes  
+Example: 68.0
 
-- **DISTANCE**: Flight distance in miles
-  - *Example:* `199.0`
+AIR_TIME: Time spent in the air (minutes)  
+Example: 42.0
 
-- **CARRIER_DELAY**: Delay caused by the airline
-  - *Example:* `null` or `15.0`
+DISTANCE: Flight distance in miles  
+Example: 199.0
 
-- **WEATHER_DELAY**: Delay caused by weather conditions
-  - *Example:* `null` or `10.0`
+CARRIER_DELAY: Delay caused by the airline  
+Example: null or 15.0
 
-- **NAS_DELAY**: Delay caused by National Airspace System
-  - *Example:* `null` or `5.0`
+WEATHER_DELAY: Delay caused by weather conditions  
+Example: null or 10.0
 
-- **SECURITY_DELAY**: Delay due to security reasons
-  - *Example:* `null` or `0.0`
+NAS_DELAY: Delay caused by National Airspace System  
+Example: null or 5.0
 
-- **LATE_AIRCRAFT_DELAY**: Delay due to a previous flight arriving late
-  - *Example:* `null` or `20.0`
+SECURITY_DELAY: Delay due to security reasons  
+Example: null or 0.0
 
-- **Unnamed: 27**: Extra column with all values as `null`
+LATE_AIRCRAFT_DELAY: Delay due to a previous flight arriving late  
+Example: null or 20.0
+
+Unnamed: 27: Extra column with all values as null
 
 ## Requirements
 
@@ -112,32 +113,32 @@ Software:
 - Docker Compose
 
 Data Files:  
-- A CSV file, named `/data/2009.csv`. The file size is 802,2 MB.
+- A CSV file that consists of flight data, named `2009.csv`. The file size is 802,2 MB.
 
+Data folder view (other files are from other projects, but most important is 2009.csv): 
 ![folder.png](img/folder.png)
 
 ### Setup
 - Save csv file to /data location
 - Navigate to project3 directory `cd project3`
-- Start the container with `docker compose up -d`.
+- Start the docker container with `docker compose up -d`.
 - Access the project on http://localhost:8891/lab/tree/notebook.ipynb
 
 ## Queries 
 ### Query 0
 Description: Read the csv file and create a graph using Graphframes in the Spark environment.
 Solution: 
-- In the first cell, the code initialized a PySpark SparkSession with Delta Lake support and includes GraphFrames library for graph processing.
-It configures memory settings and sets Spark SQL extensions for Delta operations.
-- In cell 2, we import necessary functions and classes for graph analysis using GraphFrames in PySpark. We import GraphFrame for graph operations and seceral PySpark SQL functions like
-col, coalesce, lit and sum for dataframe transformations.
-- In cell 3, we read the CSV file ( 2009.csv) located in the /.data directory into the spark dataframe. Th header=True, tells Spark to read the first row as a header.
-- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the directed edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network.
+- In the first cell, the code initialized a PySpark SparkSession with Delta Lake support and includes GraphFrames library for graph processing. It configures memory settings and sets Spark SQL extensions for Delta operations.
+- In cell 2, we import necessary functions and classes for graph analysis using GraphFrames in PySpark. We import GraphFrame for graph operations and PySpark SQL functions like col, coalesce, lit and sum for dataframe transformations.
+- In cell 3, we read the CSV file ( 2009.csv) located in the /.data directory into the spark dataframe. The header=True, tells Spark to read the first row as a header.
+- In cell 4, we create a list of unique airports by selecting origin (ORIGIN) and destination (DEST), columns and renaming them to one common column id, then removing duplicates. These serve as nodes of the graph. Then we define the edges, that represent flights, where each edge goes from source to destination airport. Then we create the GraphFrame graph object using the nodes and edges defined earlier to create flight network.
 - In cell 5, we persist the GraphFrame in memory using gf.persist(), this improves performance for repeated graph operations. The vertices (v) contain a single column id and edges contain two columns src and dst.
 `GraphFrame(v:[id: string], e:[src: string, dst: string])`
  
 Analysis: The CSV file is successfully read into dataframe.
 All the necessary functions, classes and Graphframes are imported. A graph object is created, where nodes represent airports (using their codes) and edges represent direct flights between them.
 
+Example of displayed data before creating graph:
 ![dataframe.png](img/dataframe.png)
 
 ### Query 1
@@ -149,7 +150,7 @@ Solution:
 - In cell 9, we compute the triangle count for each airport in the graph.  triangleCount() runs the triangle count algorithm, which finds the count of triangles each airport is part of. A triangle represents closed loop where all three airports are directy connected to each other by flights. Then we display each airport along with the number of triangles it participates in. This helps to identify highly interconnected airports. 
 
 Analysis:
-I added images here to visualize some results. These tables are not sorted, but for analysing I used orderBy() to visualize the highest and lowest counts results. 
+I added images here to visualize results. These tables in images are not sorted, but for analysing I used orderBy() to visualize the highest and lowest counts results. 
 1) In-degree
 This table shows the number of incoming flights for each airport. After sorting, the highest in-degree is at ATL with 417 457 incoming flights, followed by ORD (313 769) and DFW (264 398). JFK has 119 571 and BOS has 110 463, also ranking among the busiest. The lowest in-degree is seen at PIR with just 3 flights and others like RHI (41) and BJI (55) show very limited inbound traffic.
 ![indegree.png](img/indegree.png)
@@ -157,11 +158,11 @@ This table shows the number of incoming flights for each airport. After sorting,
 This table shows the number of outgoing flights per airport. After sorting, the highest out-degree again belongs to ATL with 417 449 flights, followed by ORD (313 848) and DFW (264 396). JFK (119 574) and BOS (110 460) continue to appear among the busiest. On the lower end, PIR (3), RHI (41), and BJI (54) show the lowest out-degree, showing minimal departures.
 ![outdegree.png](img/outdegree.png)
 5) Total degree
-This table reflects the overall activity (incoming + outgoing) per airport.  After sorting, ATL leads with a total degree of 834 906, making it the most active airport in the dataset. Other high-traffic airports are ORD (627 617) and DFW (528 794). But, PIR has the lowest total degree at 6, followed by RHI (82) and BJI (109), which shows extremely limited overall flight activity.
+This table reflects the overall activity (incoming + outgoing) per airport.  After sorting, ATL has the highest total degree of 834 906, making it the most active airport in the dataset. Other high-traffic airports are ORD (627 617) and DFW (528 794). But, PIR has the lowest total degree at 6, followed by RHI (82) and BJI (109), which shows extremely limited overall flight activity.
 
 ![totaldegree.png](img/totaldegree.png)
 7) Triangle count
-This table shows how many three-airport roundtrip loops (triangles) each airport is part of, revealing local connectivity and network density. After sorting, The highest triangle count is at ATL (1761), followed by ORD (1678) and DFW (1503). Airports like MEM (1105), JFK (942), and BOS (860) also show strong local connectivity. At the same time, many airports — including TEX, GST, EKO, BJI, and RHI — have a triangle count of 0, meaning they are not part of any interconnected clusters.
+This table shows how many three-airport roundtrip loops (triangles) each airport is part of, revealing local connectivity and network density. After sorting, The highest triangle count is at ATL (1761), followed by ORD (1678) and DFW (1503). Airports like MEM (1105), JFK (942), and BOS (860) also show strong local connectivity. At the same time, many airports (TEX, GST and EKO) have a triangle count of 0, meaning they are not part of any interconnected clusters.
 ![trianglecount.png](img/trianglecount.png)
 
 
@@ -170,13 +171,13 @@ Description: Compute the total number of triangles in the graph.
 Solution: 
 - In cell 10, we compute the total number of triangles using the triangle count DataFrame. Because each triangle is counted once at each of its three nodes (vertices), we divide the total sum by 3 to avoid triple-counting.
 
-Analysis: The graph contains a total number of 16 015 unique triangles. This represents a set of three interconnected airports. These triangles show closed flight routine among 3-airports. 
+Analysis: The graph contains a total number of 16 015 unique triangles. This represents a set of three interconnected airports. These triangles show closed flight routine among 3-airports.
 
 ### Query 3
 Description: Compute a centrality measure of your choice natively on Spark using Graphframes.
 
 Solution: 
-In here we chose eigenvector centrality, which measures the influence of an airport in a network based on the importance of its neightbors. 
+In here we chose eigenvector centrality, which measures the influence of an airport in a network based on the importance of its neighbors. 
 - In cell 11, convert the directed graph to undirected graph by adding reverse edges. Then initialize all
 vertex scores to 1, for a iterative computation.
 - In cell 12, perform 10 iterations all together, where each node is updating its score based on the sum of the neighbors scores. After each iteration, scores are normalized to keep values stable.
@@ -193,9 +194,9 @@ These airports are all very well connected to other highly influential airports.
 Description: Implement the PageRank algorithm natively on Spark using Graphframes.
 
 Solution: 
-- In cell 14, we apply the pageRank function from GraphFrames, which calculates the importance of each airport based on how many other important airportant point to it. We reset the probability to 0.15 and then run the algorithm for 5 iterations. Then we sort he results in descending order by the pagerank score to find the most influencial. 
+- In cell 14, we apply the pageRank function from GraphFrames, which calculates the importance of each airport based on how many other important airportant point to it. We reset the probability to 0.15 and then run the algorithm for 5 iterations. Then we sort he results in descending order by the pagerank score to find the most influencial airports. 
 
-Analysis: The top airport are ATL (19.51), ORD (13.20) and DFW(12.01). Other big airports like LAX also rank high, confirming their importance in air network. These results match and are consistent with previous results. But this shows that being connected to well-ranked airports is more important than just having many connections. Good example for this is JFK airport, which had total degree of 239 145, but pagerank is 4.57 which is quite low. Then SLC which total degree is 263 368 and pagerank is 7.21. This shows that SLC is more tightly connected to other highly ranked airports than JFK. 
+Analysis: The top airport are ATL (19.51), ORD (13.20) and DFW(12.01) like in other resulst as well. Other big airports like LAX also rank high, confirming their importance in air network. These results match and are consistent with previous results. But this shows that being connected to well-ranked airports is more important than just having many connections. Good example for this is JFK airport, which had total degree of 239 145, but pagerank is 4.57 which is quite low. Then SLC which total degree is 263 368 and pagerank is 7.21. This shows that SLC is more tightly connected to other highly ranked airports than JFK. 
 
 ![pagerank.png](img/pagerank.png)
 
@@ -205,9 +206,11 @@ Description: Find the group of the most connected airports
 Solution: 
 - In cell 15, we compute the degree centrality by summing each airorts in-degree and out-degree. This gives direct flight connections per airport
 
-Analysis: The airport with the highest degree centrality are ATL (834 906), ORD (627 617) and  DFW (528 794).
-These airports are the most directly connected in the eniter network, meaning they are either receiveing or sending out thee largest amount of flights. These are the major airports or bottlenecks are are crucial to the air traffix in U.S.
-This measure shows how well-connected the airport is overall. Unline other methods before, it does not consider the importance of connected nodes, but rathe rjust the total number of connections. 
+Analysis: The airport with the highest degree centrality are ATL (834 906), ORD (627 617) and DFW (528 794).
+These airports are the most directly connected in the entire network, meaning they are either receiveing or sending out the largest amount of flights. These are the major airports or bottlenecks are are crucial for the working air traffix in U.S.
+This measure shows how well-connected the airport is overall. Unline other methods before, it does not consider the importance of connected nodes, but rather just the total number of connections. 
+
+![degreecentrality.png](img/degreecentrality.png)
 
 ### License
 Licensed under the Apache 2.0 License.
