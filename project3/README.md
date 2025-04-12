@@ -121,7 +121,7 @@ Data folder view (other files are from other projects, but most important is 200
 ### Setup
 - Save csv file to /data location
 - Navigate to project3 directory `cd project3`
-- Start the docker container with `docker compose up -d`.
+- Run Docker compose file from project directory: `docker compose up -d`.
 - Access the project on http://localhost:8891/lab/tree/notebook.ipynb
 
 ## Queries 
