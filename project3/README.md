@@ -168,7 +168,8 @@ This table shows how many three-airport roundtrip loops (triangles) each airport
 ### Query 2
 Description: Compute the total number of triangles in the graph.
 Solution: 
-Analysis:
+- In cell 10, we compute the total number of triangles using the triangle count DataFrame. Because each triangle is counted once at each of its three nodes (vertices), we divide the total sum by 3 to avoid triple-counting.
+Analysis: The graph contains a total number of 16 015 unique triangles. This represents a set of three interconnected airports. These triangles show closed flight routine among 3-airports. 
 
 ### Query 3
 Description: Compute a centrality measure of your choice natively on Spark using Graphframes.
