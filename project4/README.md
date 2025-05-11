@@ -5,10 +5,10 @@ Project [Big Data](https://courses.cs.ut.ee/2025/bdm/spring/Main/HomePage) is pr
 
 Students: Marielle Lepson, Karel Paan, Andre Ahuna, Aksel Õim
 
-# Project 3: Analysing Flight Interconnected Data
+# Project 4: Airline Delay and Cancellation Prediction with Spark ML
 
 ## Data
-The 2009.csv data file contains information of U.S. domestic airline flights in 2009. 
+The 2009.csv and 2010.csv data file contains information of U.S. domestic airline flights in 2009. 
 Each row represents a single flight and it includes information such as flight date, airline, flight number, origin and destination airports, scheduled and actual times,
 delays, cancellation and etc.
 
@@ -111,29 +111,55 @@ Software:
 - Docker Compose
 
 Data Files:  
-- A CSV file that consists of flight data, named `2009.csv`. The file size is 802,2 MB.
+- A CSV file that consists of flight data, named `2009.csv`. The file size is 792,6 MB.
+- A CSV file that consists of flight data, named `2010.csv`. The file size is 794,2 MB.
 
 Data folder view (other files are from other projects, but most important is 2009.csv): 
 ![folder.png](img/folder.png)
 
 ### Setup
 - Save csv file to /data location
-- Navigate to project3 directory `cd project3`
+- Navigate to project3 directory `cd project4`
 - Run Docker compose file from project directory: `docker compose up -d`.
 - Access the project on http://localhost:8891/lab/tree/notebook.ipynb
 
 ## Queries 
-### Query 0
+### Task 1
+1. PySpark Session Setup
+2. Data loading and Processing
+3. Optimizing storage format
+4. Data Preparation
 
-### Query 1
+### Task 2
+1. Column Renaming:
+2. Feature Engineering:
+3. Data Cleaning:
+4. Data Validation:
 
-### Query 2
+### Task 3
+1. Carrier Analysis
+2. Cancellation Analysis
+3. Class Distribution Analysis
 
-### Query 3
+### Task 4
+1. Setup and Imports
+2. Data Type Conversion
+3. Feature Selection and Organization
+4. Feature Transformation Pipeline
+5. Pipeline Execution
+6. Feature Verification and Documentation
 
-### Query 4
+### Task 5
+1. Label Creation
+2. Train-Test Split
+3. Performance Optimization
+4. Evaluation Setup
 
-### Query 5
+### Task 6
+![importance_chart.png](img/importance_chart.png)
+
+### Task 7
+Scoring the pipelined model on 2010.csv data.
 
 ### License
 Licensed under the Apache 2.0 License.
